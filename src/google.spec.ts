@@ -510,6 +510,59 @@ describe('Parsing Coffee page', () => {
   });
 });
 
+describe('Parsing Pizza page', () => {
+  let html: string;
+  let serp: Serp;
+
+  beforeAll(() => {
+    html = fs.readFileSync(`${root}pizza.html`, { encoding: 'utf8' });
+    serp = new GoogleSERP(html).serp;
+  });
+
+  
+  test('Page should have organic results', () => {
+    expect(serp.organic).toHaveLength(10);
+  });
+
+  test('Page should have knowledge graph', () => {
+    expect(serp.knowledgeGraph).toBeDefined();
+  });
+
+  test('Title and type of knowledge graph', () => {
+    expect(serp).toHaveProperty(["knowledgeGraph","title"], "Pizza");
+    expect(serp).toHaveProperty(["knowledgeGraph","type"], "Dish");
+  });
+});
+
+
+describe('Parsing humburger page', () => {
+  let html: string;
+  let serp: Serp;
+
+  beforeAll(() => {
+    html = fs.readFileSync(`${root}humburger.html`, { encoding: 'utf8' });
+    serp = new GoogleSERP(html).serp;
+  });
+
+  
+  test('Page should have organic results', () => {
+    expect(serp.organic).toHaveLength(9);
+  });
+
+  test('Page should have knowledge graph', () => {
+    expect(serp.knowledgeGraph).toBeDefined();
+  });
+
+  test('Title and type of knowledge graph', () => {
+    expect(serp).toHaveProperty(["knowledgeGraph","title"], "Burger");
+    expect(serp).toHaveProperty(["knowledgeGraph","type"], "Food");
+  });
+});
+
+
+
+
+
 describe('Parsing Dell page', () => {
   let html: string;
   let serp: Serp;
@@ -574,6 +627,12 @@ describe('Parsing Dell page', () => {
     expect(serp).toHaveProperty(['shopResults', 1, 'votes'], '5k+');
   });
 });
+
+
+
+
+
+
 
 describe('Parsing no results page', () => {
   let html: string;

@@ -15,6 +15,13 @@ export interface Serp {
   shopResults?: ShopResult[];
   error?: string;
   locals?: Local[];
+  knowledgeGraph?: KnowledgeGraph;
+}
+
+
+export interface KnowledgeGraph{
+  title: string;
+  type: string;
 }
 
 export interface TopStory {

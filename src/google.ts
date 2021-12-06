@@ -16,6 +16,7 @@ import {
   TopStory,
   VideoCard,
   Local,
+  KnowledgeGraph,
 } from './models';
 import * as utils from './utils';
 
@@ -41,6 +42,7 @@ export class GoogleSERP {
     shop: true,
     stories: true,
     locals: true,
+    knowledgeGraph: true,
   };
 
   constructor(html: string, options?: Record<string, boolean>) {
@@ -105,7 +107,9 @@ export class GoogleSERP {
       if (options.locals) {
         this.getLocals();
       }
-
+      if(options.knowledgeGraph) {
+        this.getKnowledgeGraph();
+      }
       // this.getAvailableOn();
     }
   }
@@ -220,6 +224,18 @@ export class GoogleSERP {
       });
     });
     this.serp.relatedKeywords = relatedKeywords;
+  }
+
+  private getKnowledgeGraph(){
+    const knowledge_graph_card_class = '.I6TXqe';
+    const elemets_of_class = this.$(knowledge_graph_card_class);
+    if(elemets_of_class.length == 0) return;
+    const title = this.$(this.$(".qrShPb").get(0)).text();
+    const type = this.$(this.$(".wwUB2c").get(0)).text();
+    this.serp.knowledgeGraph = {
+      title,
+      type
+    };
   }
 
   private parseCachedAndSimilarUrls(element: cheerio.Element | cheerio.Node, result: Result) {
