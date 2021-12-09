@@ -127,6 +127,7 @@ export class GoogleSERP {
       const domain = utils.getDomain(url);
       const title = this.elementText(element, 'h3');
       const snippet = this.getSnippet(element);
+      const sippetMatched = this.getsSippetMatched(element);
       const linkType = utils.getLinkType(url);
       const result: Result = {
         domain,
@@ -135,6 +136,7 @@ export class GoogleSERP {
         snippet,
         title,
         url,
+        sippetMatched
       };
       this.parseSitelinks(element, result);
       this.parseCachedAndSimilarUrls(element, result);
@@ -172,6 +174,19 @@ export class GoogleSERP {
   private getSnippet(element: cheerio.Element | cheerio.Node): string {
     const text = this.$(element).parent().next().text();
     return text;
+  }
+
+  private getsSippetMatched(element: cheerio.Element | cheerio.Node): string[] {
+    const sippetHtml = this.$(element).parent().next().html();
+    let result: string[] = []
+    if(sippetHtml == null) return result;
+
+    this.$(sippetHtml).find('div > span > em').each((index, element)=>{
+      if(element != null){
+        result.push(this.$(element).text());
+      }
+    });
+    return result;
   }
 
   private parseSitelinks(element: cheerio.Element | cheerio.Node, result: Result) {

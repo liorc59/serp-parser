@@ -524,6 +524,13 @@ describe('Parsing Pizza page', () => {
     expect(serp.organic).toHaveLength(10);
   });
 
+  test('snippet metched test', () =>{
+    const firstOrganic  = serp.organic[0];
+    const secendOrganic = serp.organic[1];
+    expect(firstOrganic.sippetMatched).toEqual(["pizza", "pizza"]);
+    expect(secendOrganic.sippetMatched).toEqual(["pizzas","pizza"]);
+  })
+
   test('Page should have knowledge graph', () => {
     expect(serp.knowledgeGraph).toBeDefined();
   });

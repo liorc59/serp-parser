@@ -146,6 +146,7 @@ export interface Result {
   linkType: LinkType;
   sitelinks?: Sitelink[];
   snippet: string;
+  sippetMatched?: string[];
   title: string;
   url: string;
   featured?: boolean;
