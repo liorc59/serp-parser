@@ -17,6 +17,7 @@ import {
   VideoCard,
   Local,
   KnowledgeGraph,
+  RichSnippet,
 } from './models';
 import * as utils from './utils';
 
@@ -128,6 +129,7 @@ export class GoogleSERP {
       const title = this.elementText(element, 'h3');
       const snippet = this.getSnippet(element);
       const sippetMatched = this.getsSippetMatched(element);
+      const richSnippet = this.getRichSnippet(element);
       const linkType = utils.getLinkType(url);
       const result: Result = {
         domain,
@@ -136,7 +138,8 @@ export class GoogleSERP {
         snippet,
         title,
         url,
-        sippetMatched
+        sippetMatched,
+        richSnippet
       };
       this.parseSitelinks(element, result);
       this.parseCachedAndSimilarUrls(element, result);
@@ -177,16 +180,41 @@ export class GoogleSERP {
   }
 
   private getsSippetMatched(element: cheerio.Element | cheerio.Node): string[] {
-    const sippetHtml = this.$(element).parent().next().html();
+    const snippetHtml = this.$(element).parent().next().html();
     let result: string[] = []
-    if(sippetHtml == null) return result;
+    if(snippetHtml == null) return result;
 
-    this.$(sippetHtml).find('div > span > em').each((index, element)=>{
+    this.$(snippetHtml).find('div > span > em').each((index, element)=>{
       if(element != null){
         result.push(this.$(element).text());
       }
     });
     return result;
+  }
+
+  private getRichSnippet(element: cheerio.Element | cheerio.Node): RichSnippet[]{
+    const snippetHtml = this.$(element).parent().next().html();
+    const result: RichSnippet[] = [];
+    if(snippetHtml == null) return result;
+    this.$('.rEYMH').each((index, element)=>{
+        const keyElements = this.$(element).find('.YrbPuc');
+        const value = this.$(element).find('.wHYlTd').first().text();
+        let key = null;
+        if(keyElements.length > 0){
+          key = keyElements.first().text();
+        }
+        if(key != null){
+          result.push({
+            key,
+            value
+          })
+        }else{
+          result.push({
+            value
+          })
+        }
+      });
+      return result;
   }
 
   private parseSitelinks(element: cheerio.Element | cheerio.Node, result: Result) {

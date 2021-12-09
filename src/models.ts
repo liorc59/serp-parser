@@ -147,10 +147,18 @@ export interface Result {
   sitelinks?: Sitelink[];
   snippet: string;
   sippetMatched?: string[];
+  richSnippet?: RichSnippet[]; 
   title: string;
   url: string;
   featured?: boolean;
 }
+
+
+export interface RichSnippet{
+  key?: string;
+  value: string;
+}
+
 
 export interface Sitelink {
   title: string;

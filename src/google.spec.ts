@@ -524,11 +524,17 @@ describe('Parsing Pizza page', () => {
     expect(serp.organic).toHaveLength(10);
   });
 
-  test('snippet metched test', () =>{
+  test('Snippet metched test', () =>{
     const firstOrganic  = serp.organic[0];
     const secendOrganic = serp.organic[1];
     expect(firstOrganic.sippetMatched).toEqual(["pizza", "pizza"]);
     expect(secendOrganic.sippetMatched).toEqual(["pizzas","pizza"]);
+  });
+
+  test('Rich snippet test', ()=>{
+    const richSnippet = serp.organic[0].richSnippet;
+    expect(richSnippet).toHaveProperty(["0", "key"],"Main ingredients: ");
+    expect(richSnippet).toHaveProperty(["0","value"], "Dough, sauce (usually tomato ...");
   })
 
   test('Page should have knowledge graph', () => {
