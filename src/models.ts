@@ -22,6 +22,31 @@ export interface Serp {
 export interface KnowledgeGraph{
   title: string;
   type: string;
+  category?: string;
+  peopleAlsoSearchFor?: PepoleAlsoSearchForKnowladge[];
+  address?: string;
+  phone?: string;
+  rating?: string;
+  reviewers?: string;
+  website?: string;
+  pepoleAlsoSearchForLink?: string;
+  hotelDetails?: string;
+  hotelsAdds?: HotelsAds[];
+  hotelProperties?: string[];
+  image?: string;
+}
+
+export interface HotelsAds{
+  link: string;
+  host: string;
+  price: string;
+  details?: string;
+}
+
+export interface PepoleAlsoSearchForKnowladge{
+  link: string;
+  name: string;
+  type: string;
 }
 
 export interface TopStory {

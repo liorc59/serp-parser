@@ -573,6 +573,70 @@ describe('Parsing humburger page', () => {
 });
 
 
+describe('Parsing royal beach page', () => {
+  let html: string;
+  let serp: Serp;
+
+  beforeAll(() => {
+    html = fs.readFileSync(`${root}royal-beach.html`, { encoding: 'utf8' });
+    serp = new GoogleSERP(html).serp;
+  });
+
+  
+  test('Page should have organic results', () => {
+    expect(serp.organic).toHaveLength(9);
+  });
+
+  test('Page should have knowledge graph', () => {
+    expect(serp.knowledgeGraph).toBeDefined();
+  });
+
+  test('hotel knoledge graph test', () => {
+    expect(serp).toHaveProperty(["knowledgeGraph","category"], "5-star hotel");
+    expect(serp).toHaveProperty(["knowledgeGraph", "address"], "Ha-Yam St 1, Eilat");
+    expect(serp).toHaveProperty(["knowledgeGraph", "phone"], "08-636-8888");
+    expect(serp).toHaveProperty(["knowledgeGraph", "rating"], "4.5");
+    expect(serp).toHaveProperty(["knowledgeGraph", "reviewers"], "4,554 Google reviews");
+    expect(serp).toHaveProperty(["knowledgeGraph", "website"], "https://www.isrotel.com/royal-beach");
+    expect(serp).toHaveProperty(["knowledgeGraph", "pepoleAlsoSearchForLink"], "https://www.google.com/search?biw=836&bih=821&hotel_occupancy=2&tbm=lcl&q=Royal+Beach+Eilat&rflfq=1&num=20&stick=H4sIAAAAAAAAAB2QO04cYRCEtYGRUzOIYKI9Qr-qHykSucUNRmgRSCstWkh8HU7gc_kUriH79f3VVdX982ZdXHXEADHX8MlwXe9UGmWSEpmFFCkx0pKWaVcrlWgtxaxLjHm6mIZZivKV61IT0aGV0ACVAGF6wBAugCow01iXEZeRmOEsJ2ipLGURIgOjPAoC3-MtWCWg1tZt6ppJGvT2wTBNVCTUi1STcvUJh7eiESzAxBJYS3WNuknFbpBGJ2_LNqa3o3cDblTVjQ6xqP0269LJ7mMK_rpVDmS9zdkJaO1ZTmv7bmVwD0FVBfUeeysMtCdBnVEajCB1cfCiVGvN8Lrj66LDEedSxVc2-8jfw-Hf4f736fJ-Ph2388fl-HHars-vx5fL9evHr6fLn-18fDhtJI9v5-3zP9ZTnWXfAQAA&sa=X&ved=2ahUKEwj0opCzid70AhUsREEAHWb5DIUQ63UoAXoECBUQAg");
+    expect(serp).toHaveProperty(["knowledgeGraph", "peopleAlsoSearchFor",0,"name"], "מלון ארקדיה ספא אילת");
+    expect(serp).toHaveProperty(["knowledgeGraph", "peopleAlsoSearchFor",0,"type"], "Hotel");
+    expect(serp).toHaveProperty(["knowledgeGraph", "peopleAlsoSearchFor",0,"link"], "https://www.google.com/#");
+    expect(serp).toHaveProperty(["knowledgeGraph", "hotelDetails"], "This upscale beachfront hotel on the Gulf of Eilat is 9 km from the Coral World Underwater Observatory and 18 km from Aqaba Archaeological Museum. … MOREElegant rooms feature minibars, free Wi-Fi and flat-screen TVs; most have balconies. Upgraded rooms come with whirlpool tubs, executive lounge access and/or hot tubs. Suites offer separate living rooms. Upgraded suites have spa access. Room service is available.Breakfast and parking are complimentary. Other amenities consist of 4 restaurants, including Italian and Japanese eateries, plus a bar and a spa. There's also an outdoor pool, a gym and a kids' club, as well as a synagogue.");
+    expect(serp).toHaveProperty(["knowledgeGraph", "hotelsAdds",0,"host"], "FindHotel.net");
+    expect(serp).toHaveProperty(["knowledgeGraph", "hotelsAdds",0,"price"], "₪1,036");
+    expect(serp).toHaveProperty(["knowledgeGraph", "hotelsAdds",0,"link"], "https://www.google.com/url?q=https://www.google.com/aclk?sa%3Dl%26ai%3DCngdZqNG1YbWAN8WHwuIPsMOjmAat_e-6ZKyu0I_1Da22gqH0KQgKEAEoAmD5AqABiueC3gOpAkp6GFqd_LI-qAMFqgRHT9CweXpDuulBRUoWwuRPqKSYBgi1EjvE7P0XDXvNjv4s6kUN5AQEsGjeXSyRyJusNZuRKHjW-WPfDI6JCFphUbcrC4WH41nABLuLpoW8A4gFoqfO6i7ABZIBoAZliAcBkAcByAmsAaIKpgEKCjIwMjEtMTItMjEQASk46g86ehEIJDIJZmluZGhvdGVsOAJIAVImaWxfbGl2ZXB1c2hfcmZkXzExNjMxOTZfMjAyMS0xMi0yMV8xXzJdPvpWRGVIITBDcgNJTFOCAQ0KC0xLYmVUd1pWRHZrigELSUxfTGl2ZVB1c2iwAQG4AQDIAe3fkvUF4AEA6AEB8AEB-AEAoAIA4AIA6gIDSUxT8AIBigMA6AoBkAsD0AscqgwCCAG4DAHQFQGAFwE%26sig%3DAOD64_210Aj92pU914rfnfFXgpDu0XkYJw%26adurl%3Dhttps://search.findhotel.net/Hotel/Search?checkIn%253D2021-12-21%2526checkOut%253D2021-12-22%2526curr%253DILS%2526rooms%253D2:%2526utm_source%253Dgha%2526utm_medium%253Dcpc%2526hotelId%253D1163196%2526userCountry%253DIL%2526utm_campaign%253Dgha%2526profile%253Dr2d2m73kn8%2526preferredRate%253D1036.04%2526isG1%253D0%2526label%253Dsrc%25253Dgha%252526cltype%25253Dhotel%252526datype%25253Ddefault%252526gsite%25253Dlocaluniversal%252526ucountry%25253DIL%252526udevice%25253Ddesktop%252526hotel%25253D1163196%252526day%25253D21%252526month%25253D12%252526year%25253D2021%252526los%25253D1%252526price%25253D1036.04%252526currency%25253DILS%252526userlang%25253Den%252526cid%25253D12571612066%252526listid%25253D%252526rateid%25253DIL_LivePush%252526closerateid%25253D%252526_th%25253Da989382189d2225bd72da5ce802c1659bbccb8ac91541344%252526query%25253DLivePush%252526g1%25253D0%252526promo%25253D0%252526isPrivateRate%25253D0%252526isAudienceUser%25253D0%252526isPaidClick%25253D1");
+    expect(serp).toHaveProperty(["knowledgeGraph", "hotelsAdds",0,"details"], "Free cancellation until Dec 17");
+    expect(serp).toHaveProperty(["knowledgeGraph", "hotelProperties"], ["Free Wi-Fi","Free breakfast","Free parking","Accessible", "Outdoor pool","Air-conditioned"]);
+    expect(serp).toHaveProperty(["knowledgeGraph", "image"], "https://www.google.com/travel/hotels/entity/CgsIy7y07JafyoKQARAB/lightbox/CAESUmh0dHBzOi8vZDJoeXoyYmZpZjNjcjguY2xvdWRmcm9udC5uZXQvaW1hZ2VSZXBvLzEvMC8zMi82MjAvMTkxL1N3aW1taW5nX3Bvb2xfUC5qcGc?g2lb=4419364,4597339,4596364,4679296,4258168,4306835,4649665,4640247,4672717,4270442,4317915,4371335,2503771,4401769,4624411,4685122,4680343,4659203,4641139,4605861,2503781,2502548,4670987,4291517,4270859,4284970&hl=en-IL&gl=il&cs=1&ssta=1&grf=EmQKLAgOEigSJnIkKiIKBwjlDxAMGBUSBwjlDxAMGBYgADAeQMoCSgcI5Q8QDBgMCjQIDBIwEi6yASsSKQonCiUweDE1MDA3MjMxOTQ5MTEyYjk6MHg5MDA1MjhmOTZkOGQxZTRi&rp=EMu8tOyWn8qCkAE4AkAASAHAAQI&ictx=1&sa=X&ved=2ahUKEwj0opCzid70AhUsREEAHWb5DIUQoip6BAgOEAM");
+
+
+  });
+});
+
+
+describe('Parsing inline hotels page', () => {
+  let html: string;
+  let serp: Serp;
+
+  beforeAll(() => {
+    html = fs.readFileSync(`${root}hotelsInline.html`, { encoding: 'utf8' });
+    serp = new GoogleSERP(html).serp;
+  });
+
+  
+  test('Page should have organic results', () => {
+    expect(serp.organic).toHaveLength(10);
+  });
+
+  test('Page should have knowledge graph', () => {
+    expect(serp.hotels).toBeDefined();
+    expect(serp).toHaveProperty('hotels',[]);
+  });
+
+  
+});
+
 
 
 

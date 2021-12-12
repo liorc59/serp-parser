@@ -17,7 +17,9 @@ import {
   VideoCard,
   Local,
   KnowledgeGraph,
+  PepoleAlsoSearchForKnowladge,
   RichSnippet,
+  HotelsAds
 } from './models';
 import * as utils from './utils';
 
@@ -270,15 +272,110 @@ export class GoogleSERP {
   }
 
   private getKnowledgeGraph(){
+    const $ = this.$;
     const knowledge_graph_card_class = '.I6TXqe';
     const elemets_of_class = this.$(knowledge_graph_card_class);
     if(elemets_of_class.length == 0) return;
-    const title = this.$(this.$(".qrShPb").get(0)).text();
-    const type = this.$(this.$(".wwUB2c").get(0)).text();
-    this.serp.knowledgeGraph = {
+    const knowledgeGraphElement = elemets_of_class.first();
+    const title = $($(".qrShPb").get(0)).text();
+    const type = $($(".wwUB2c").get(0)).text();
+    const knowledgeGraph: KnowledgeGraph = {
       title,
-      type
-    };
+      type,
+    }
+    if(this.isHotelKnoladgeGraph(knowledgeGraphElement)){
+      this.getHotelKnoladgeGraph(knowledgeGraphElement, knowledgeGraph);
+    }
+   
+
+    this.serp.knowledgeGraph = knowledgeGraph;
+  }
+
+  private getHotelKnoladgeGraph(knowledgeGraphElement: cheerio.Cheerio<cheerio.Element>, knowledgeGraph:KnowledgeGraph){
+    const $ = this.$;
+    const category = $(knowledgeGraphElement).find(".YhemCb").first().text();
+    const rating = $(knowledgeGraphElement).find('.Aq14fc').first().text();
+    const address = $(knowledgeGraphElement).find('.BOu6vf').first().text();
+    const phone = $(knowledgeGraphElement).find('.LrzXr').first().first().first().text();
+    const reviewers = $(knowledgeGraphElement).find('.hqzQac').first().text();
+    const pepoleAlsoSearchForElement = $(knowledgeGraphElement).find('.zVvuGd').first();
+    const website = $(knowledgeGraphElement).find('.QqG1Sd').first().find('a').prop("href");
+    const hotelDetails = $(knowledgeGraphElement).find('.ggV7z').first().text();
+    const pepoleAlsoSearchFor: PepoleAlsoSearchForKnowladge[] = this.getPepoleAlsoSearchFor(pepoleAlsoSearchForElement);
+    const pepoleAlsoSearchForLink = utils.getUrl($(knowledgeGraphElement).find('.hKuTtf').first().find('a').prop('href'));
+    const hotelsAdds: HotelsAds[] = this.getHotelAds(knowledgeGraphElement);
+    
+    const hotelPropertiesElemenyList = $(knowledgeGraphElement).find('.il6UG');
+    if(hotelPropertiesElemenyList.length > 0){
+      const hotelProperties: string[] = [];
+      hotelPropertiesElemenyList.first().find(".THkfd").each((index, element)=>{
+        hotelProperties.push($(element).text())
+      })
+      knowledgeGraph.hotelProperties = hotelProperties;
+    }
+
+    const imageElementList = $(knowledgeGraphElement).find('.thumb');
+    if(imageElementList.length > 0){
+      knowledgeGraph.image = utils.getUrl(imageElementList.first().find('a').first().prop("href"));
+    }
+
+    knowledgeGraph.type = "Hotel";
+    knowledgeGraph.category = category;
+    knowledgeGraph.address = address;
+    knowledgeGraph.phone = phone;
+    knowledgeGraph.peopleAlsoSearchFor = pepoleAlsoSearchFor;
+    knowledgeGraph.rating = rating;
+    knowledgeGraph.reviewers = reviewers;
+    knowledgeGraph.website = website;
+    knowledgeGraph.pepoleAlsoSearchForLink = pepoleAlsoSearchForLink;
+    knowledgeGraph.hotelDetails = hotelDetails;
+    knowledgeGraph.hotelsAdds = hotelsAdds;
+  }
+
+
+  private getPepoleAlsoSearchFor(pepoleAlsoSearchForElement: cheerio.Cheerio<cheerio.Element>) {
+    const $ = this.$;
+    const pepoleAlsoSearchFor: PepoleAlsoSearchForKnowladge[] = [];
+    $(pepoleAlsoSearchForElement).find('.H93uF').each((index, element) => {
+      const linkString = utils.getUrl($(element).find("a").first().prop('href'));
+      const name = $(element).find('.oBrLN').first().text();
+      const type = $(element).find('.xlBGCb').first().text();
+      pepoleAlsoSearchFor.push({
+        link: linkString,
+        name,
+        type
+      });
+
+    });
+    return pepoleAlsoSearchFor;
+  }
+
+  private getHotelAds(knowledgeGraphElement: cheerio.Cheerio<cheerio.Element>) {
+    const $ = this.$;
+    const hotelsAdds: HotelsAds[] = [];
+    $(knowledgeGraphElement).find('.B4MzEf').each((index, element) => {
+      const link = $(element).find('a').prop('href');
+      const host = $(element).find('.XmKKw').first().text();
+      const price = $(element).find('.MOw9od').first().text();
+      const detailsList = $(element).find('.PMmhq');
+      const add: HotelsAds = {
+        link,
+        price,
+        host
+      };
+      if (detailsList.length > 0) {
+        add.details = detailsList.first().text();
+      }
+      hotelsAdds.push(add);
+    });
+    return hotelsAdds;
+  }
+
+  private isHotelKnoladgeGraph(knowledgeGraphElement: cheerio.Cheerio<cheerio.Element>): boolean{
+    const typeElements = this.$(knowledgeGraphElement).find('.lLVkmd');
+    if(typeElements.length == 0) return false;
+    if(typeElements.first().text() === "Hotel details") return true;
+    return false;
   }
 
   private parseCachedAndSimilarUrls(element: cheerio.Element | cheerio.Node, result: Result) {

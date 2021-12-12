@@ -1,9 +1,25 @@
 import { LinkType } from './models';
 
 export const getDomain = (url: string, base?: string): string => {
+  if(url.charAt(0) === '/'){
+    url = "https://www.google.com" + url;
+  }
+  if(url.charAt(0) === '#'){
+    url = "https://www.google.com/" + url;
+  }
   const href = new URL(url, base);
   return href.hostname;
 };
+
+export const getUrl = (url: string): string =>{
+  if(url.charAt(0) === '/'){
+    url = "https://www.google.com" + url;
+  }
+  if(url.charAt(0) === '#'){
+    url = "https://www.google.com/" + url;
+  }
+  return url;
+}
 
 export const getUrlFromQuery = (query: string): string => {
   const searchParams = new URLSearchParams(query.replace('/url?', ''));
@@ -18,6 +34,9 @@ export const getFirstMatch = (str: string, reg: RegExp): string => {
 };
 
 export const getLinkType = (url: string, base?: string): LinkType => {
+  if(url.charAt(0) === '/'){
+    url = "https://www.google.com" + url;
+  }
   const href = new URL(url, base);
   return href.pathname !== '/' ? LinkType.landing : LinkType.home;
 };
